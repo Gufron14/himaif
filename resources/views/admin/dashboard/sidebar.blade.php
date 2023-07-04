@@ -17,10 +17,26 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
+    
+    <hr class="sidebar-divider my-0">
     <li class="nav-item">
         <a class="nav-link" href="{{ url('/announcement') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-bullhorn"></i>
             <span>Pengumuman</span></a>
+    </li>
+
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/category') }}">
+            <i class="fas fa-th-list"></i>
+            <span>Kategori</span></a>
+    </li>
+
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/announcement') }}">
+            <i class="fas fa-at"></i>
+            <span>Author</span></a>
     </li>
 
     <!-- Divider -->

@@ -3,7 +3,6 @@
 
 <head>
     @include('admin.dashboard.header')
-
 </head>
 
 <body id="page-top">
@@ -29,7 +28,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                @yield('content')
+                    @yield('content')
 
                 </div>
                 <!-- /.container-fluid -->
