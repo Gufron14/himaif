@@ -12,6 +12,8 @@ class Announcement extends Model
     protected $fillable = [
         'judul',
         'isi',
+        'image',
+        'link',
         'status'
     ];
 }

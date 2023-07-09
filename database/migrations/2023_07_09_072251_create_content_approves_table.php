@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('announcements', function (Blueprint $table) {
+        Schema::create('content_approves', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->string('isi');
-            $table->string('image')->nullable();
-            $table->string('link')->nullable();
-            $table->enum('status', ['Dipublikasi', 'Draft']);
+            $table->foreignId('author_id');
+            $table->foreignId('content_id');
+            $table->string('content');
+            $table->string('category');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcements');
+        Schema::dropIfExists('content_approves');
     }
 };

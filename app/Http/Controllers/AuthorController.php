@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest()->paginate(5);
-
-        return view('admin/category', compact('categories'));
+        return view('admin.author');
     }
 
     /**
@@ -26,9 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $data['categories'] = Category::all();
-
-        return view('category/add', $data);
+        //
     }
 
     /**
@@ -39,17 +34,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required'
-        ]);
-
-        Category::create([
-            'name' => $request->name,
-            'description' => $request->description
-        ]);
-
-        return redirect('/category');
+        //
     }
 
     /**

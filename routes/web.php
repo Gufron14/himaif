@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index', [DashboardController::class, 'dashboard']);
+Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 Route::get('/announcement', [AnnouncementController::class, 'index']);
 
 Route::get('/announcement/add', [AnnouncementController::class, 'create']);
@@ -36,3 +38,9 @@ Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/category/add', [CategoryController::class, 'create']);
 Route::post('/category', [CategoryController::class, 'store']);
 
+
+// PERSETUJUAN KONTEN OLEH ADMIN
+Route::get('/contentApprove', [ContentController::class, 'index']);
+
+// AUTHOR MANAGEMENT
+Route::get('/author', [AuthorController::class, 'index']);

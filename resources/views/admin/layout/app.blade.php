@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @include('admin.dashboard.header')
+    @include('admin.layout.header')
 </head>
 
 <body id="page-top">
@@ -11,7 +11,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        @include('admin.dashboard.sidebar')
+        @include('admin.layout.sidebar')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -21,7 +21,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                @include('admin.dashboard.top-bar')
+                @include('admin.layout.top-bar')
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -37,7 +37,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            @include('admin.dashboard.footer')
+            @include('admin.layout.footer')
             <!-- End of Footer -->
 
         </div>
@@ -47,14 +47,14 @@
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
-    @include('admin.dashboard.scroll-to-top')
+    @include('admin.layout.scroll-to-top')
 
 
     <!-- Logout Modal-->
-    @include('admin.dashboard.logout-modal')
+    @include('admin.layout.logout-modal')
 
 
-    @include('admin.dashboard.script')
+    @include('admin.layout.script')
 
 </body>
 

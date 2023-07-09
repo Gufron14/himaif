@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Storage;
 
 class AnnouncementController extends Controller
 {
@@ -28,7 +30,7 @@ class AnnouncementController extends Controller
     {
         $data['announcements'] = Announcement::all();
 
-        return view('announcements/add', $data);
+        return view('announcements/add', $data);    
     }
 
     /**
@@ -38,23 +40,31 @@ class AnnouncementController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+        // validasi form
         $this->validate($request, [
             'judul' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
             'isi' => 'required|string',
             'status' => 'required|in:Dipublikasi,Draft',
-        ],
-    [
-        'judul.required' => 'Judul harus diisi',
-        'isi.required' => 'Pengumuman harus diisi',
-        'status.required' => 'pilih status untuk dipublikasikan atau sebagai draft',
-    ]);
-
-        Announcement::create([
-            'judul' => $request->judul,
-            'isi' => $request->isi,
-            'status' => $request->status,
         ]);
+
+        // upload image
+        $image_file = $request->file('image');
+        $image_ekstensi = $image_file->extension();
+        $image_nama = date('ymdhis') . '.' . $image_ekstensi;
+        $image_file->move(public_path('image'), $image_nama);
+
+        // simpan data ke database
+        $data = [
+            'judul' => $request->input('judul'),
+            'image' => $image_nama,
+            'isi' => $request->input('isi'),
+            'link' => $request->input('link'),
+            'status' => $request->input('status'),
+        ];
+
+        Announcement::create($data);
 
         return redirect('/announcement');
     }
@@ -78,10 +88,9 @@ class AnnouncementController extends Controller
      */
     public function edit(string $id)
     {
-        $title = 'Edit Aplikasi';
         $announcement = Announcement::findOrFail($id);
 
-        return view('announcement.edit', compact('announcement', 'title'));
+        return view('announcement.edit', compact('announcement'));
     }
 
     /**
@@ -91,25 +100,40 @@ class AnnouncementController extends Controller
     {
         $request->validate([
             'judul' => 'required',
+            'image' => 'nullable|mimes:jpeg,jpg,png,gif,svg|max:2048',
             'isi' => 'required',
-            'status' => 'required|in:Dipublikasi,Draft'
+            'link' => 'required',
+            'status' => 'nullable|in:Dipublikasi,Draft',
         ]);
 
         $announcement = Announcement::find($id);
         if (!$announcement) {
-            return back()->withErrors(['message' => 'aplikasi tidak ditemukan']);
+            return back()->withErrors(['message' => 'pengumuman tidak ditemukan']);
         }
 
         $data = [
             'judul' => $request->input('judul'),
             'isi' => $request->input('isi'),
-            'status' => $request->input('status'),
-
+            'link' => $request->input('link'),
+            'status' => $request->input('status')
         ];
 
-        $announcement->update($data);
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => 'mimes:jpeg,jpg,png,gif',
+            ]);
+            $image_file = $request->file('image');
+            $image_ekstensi = $image_file->extension();
+            $image_nama = date('ymdhis') . '.' . $image_ekstensi;
+            $image_file->move(public_path('image'), $image_nama);
 
-        session()->flash('message', 'Aplikasi berhasil diedit');
+            $data_image = Announcement::where('judul', $id)->first();
+            File::delete(public_path('image' . '/' . $data_image->image));
+
+            $data['image'] = $image_nama;
+        }
+
+        $announcement->update($data);
 
         return redirect('/announcement');
     }

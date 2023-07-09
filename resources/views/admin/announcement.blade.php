@@ -1,4 +1,5 @@
-@extends('admin.dashboard.index')
+@extends('admin.layout.app')
+@section('title', 'Pengumuman')
 
 @section('content')
     <div class="card shadow mb-4">
@@ -16,14 +17,21 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="/announcement" method="POST">
+                        <form action="/announcement" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <input type="text" class="form-control" placeholder="Judul" name="judul" required>
                                 </div>
                                 <div class="mb-3">
-                                    <textarea name="isi" id="" cols="30" rows="10" class="form-control" placeholder="Isi Pengumuman" required></textarea>
+                                    <input type="file" name="image" id="image" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <textarea name="isi" id="" cols="30" rows="6" class="form-control" placeholder="Isi Pengumuman" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="link" id="link"
+                                        class="form-control" placeholder="masukan link jika ada">
                                 </div>
                                 <div class="mb-3">
                                     <select class="form-control mt-3 @error('status') is-invalid @enderror" name="status" id="kategori" aria-label="Default select example">
@@ -49,11 +57,13 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable">
                     <thead>
                         <tr>
                             <th>Judul</th>
+                            <th>Gambar</th>
                             <th>Isi</th>
+                            <th>Link</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -62,9 +72,15 @@
                         @forelse ($announcements as $announcement)
                             <tr>
                                 <td>{{ $announcement['judul'] }}</td>
-                                <td>{{ $announcement['isi'] }}</td>
                                 <td>
-                                  @if ($announcement['status'] == 'Dipublikasi')
+                                    <img src="{{ url('image').'/'.$announcement->image }}" alt=""
+                                        style="max-width:100px; max-height:120px;"
+                                    />
+                                </td>
+                                <td>{{ $announcement['isi'] }}</td>
+                                <td>{{ $announcement['link']}}</td>
+                                <td>
+                                @if ($announcement['status'] == 'Dipublikasi')
                                     <span class="badge badge-success justify-content-center">Dipublikasi</span>
                                 @else
                                     <span class="badge badge-danger">Draft</span>
@@ -85,7 +101,7 @@
 
                                         {{-- Modal Edit Pengumuman --}}
                                         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-dialog modal-dialog-centered ">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">Edit Pengumuman</h5>
@@ -93,7 +109,7 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form action="{{ route('announcement.update', ['id' => $announcement->id]) }}}" method="POST">
+                                                    <form action="{{ route('announcement.update', ['id' => $announcement->id]) }}" method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="modal-body">
@@ -101,7 +117,14 @@
                                                                 <input type="text" class="form-control" value="{{ $announcement['judul'] }}" name="judul" id="judul">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <textarea name="isi" id="isi" cols="30" rows="10" class="form-control" placeholder="{{ $announcement['isi'] }}"></textarea>
+                                                                <input type="file" name="image" id="image" class="form-control">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <textarea name="isi" id="isi" cols="30" rows="6" class="form-control" placeholder="{{ $announcement['isi'] }}"></textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <input type="text" name="link" id="link"
+                                                                    class="form-control" placeholder="masukan link jika ada">
                                                             </div>
                                                             <div class="mb-3">
                                                                 <select name="status" id="" class="form-control" >
@@ -137,7 +160,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4">
+                                <td colspan="6">
                                     <p class="text-center">Pengumuman Kosong</p>
 
                                 </td>

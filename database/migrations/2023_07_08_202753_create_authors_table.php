@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('announcements', function (Blueprint $table) {
+        Schema::create('authors', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->string('isi');
-            $table->string('image')->nullable();
-            $table->string('link')->nullable();
-            $table->enum('status', ['Dipublikasi', 'Draft']);
+            $table->string('nama');
+            $table->integer('nim')->unique();
+            $table->integer('angkatan');
+            $table->integer('phone')->unique();
+            $table->string('alamat');
+            $table->string('username');
+            $table->string('password');
+            $table->string('avatar');
             $table->timestamps();
         });
     }
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcements');
+        Schema::dropIfExists('authors');
     }
 };

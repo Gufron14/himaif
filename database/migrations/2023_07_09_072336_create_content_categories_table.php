@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('announcements', function (Blueprint $table) {
+        Schema::create('content_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->string('isi');
-            $table->string('image')->nullable();
-            $table->string('link')->nullable();
-            $table->enum('status', ['Dipublikasi', 'Draft']);
+            $table->string('name');
+            $table->string('desc');
+            $table->foreignId('author_id');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcements');
+        Schema::dropIfExists('content_categories');
     }
 };
