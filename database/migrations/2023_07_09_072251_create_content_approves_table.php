@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('author_id');
             $table->foreignId('content_id');
-            $table->string('content');
-            $table->string('category');
             $table->timestamps();
         });
     }

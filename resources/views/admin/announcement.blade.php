@@ -2,6 +2,9 @@
 @section('title', 'Pengumuman')
 
 @section('content')
+
+    
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <button class="btn btn-primary font-weight-bold" data-toggle="modal" data-target="#exampleModal">+
@@ -17,28 +20,37 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="/announcement" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('announcement.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="Judul" name="judul" required>
+                                    <input type="text" class="form-control
+                                        @error('judul') is-invalid @enderror"
+                                        placeholder="Judul" name="judul">
                                 </div>
+                                @error('judul')
+                                    <div class="invalid-feedback">
+                                        isi judul
+                                    </div>
+                                @enderror
                                 <div class="mb-3">
                                     <input type="file" name="image" id="image" class="form-control">
                                 </div>
                                 <div class="mb-3">
-                                    <textarea name="isi" id="" cols="30" rows="6" class="form-control" placeholder="Isi Pengumuman" required></textarea>
+                                    <textarea name="isi" id="" cols="30" rows="6" class="form-control" placeholder="Isi Pengumuman"
+                                        required></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" name="link" id="link"
-                                        class="form-control" placeholder="masukan link jika ada">
+                                    <input type="text" name="link" id="link" class="form-control"
+                                        placeholder="masukan link jika ada">
                                 </div>
                                 <div class="mb-3">
-                                    <select class="form-control mt-3 @error('status') is-invalid @enderror" name="status" id="kategori" aria-label="Default select example">
+                                    <select class="form-control mt-3 @error('status') is-invalid @enderror" name="status"
+                                        id="kategori" aria-label="Default select example">
                                         <option selected class="text-muted">--Pilih Status--</option>
-                                            <option value="Dipublikasi">Dipublikasi</option> 
-                                            <option value="Draft">Draft</option>                              
-                                    </select> 
+                                        <option value="Dipublikasi">Dipublikasi</option>
+                                        <option value="Draft">Draft</option>
+                                    </select>
                                     @error('status')
                                         <div class="invalid-feedback">
                                             Pilih Publikasikan atau sebagai Draft
@@ -73,23 +85,23 @@
                             <tr>
                                 <td>{{ $announcement['judul'] }}</td>
                                 <td>
-                                    <img src="{{ url('image').'/'.$announcement->image }}" alt=""
-                                        style="max-width:100px; max-height:120px;"
-                                    />
+                                    <img src="{{ url('image') . '/' . $announcement->image }}" alt=""
+                                        style="max-width:100px; max-height:120px;" />
                                 </td>
                                 <td>{{ $announcement['isi'] }}</td>
-                                <td>{{ $announcement['link']}}</td>
+                                <td>{{ $announcement['link'] }}</td>
                                 <td>
-                                @if ($announcement['status'] == 'Dipublikasi')
-                                    <span class="badge badge-success justify-content-center">Dipublikasi</span>
-                                @else
-                                    <span class="badge badge-danger">Draft</span>
-                                @endif
+                                    @if ($announcement['status'] == 'Dipublikasi')
+                                        <span class="badge badge-success justify-content-center">Dipublikasi</span>
+                                    @else
+                                        <span class="badge badge-danger">Draft</span>
+                                    @endif
                                 </td>
-                                
+
                                 <td>
                                     <div class="d-flex justify-content-beetwen">
-                                        <button class="btn btn-warning" data-toggle="modal" data-target="#editModal">
+                                        <a href="{{ url('/announcement/' . $announcement->id . '/edit') }}"
+                                            class="btn btn-warning" data-toggle="modal" data-target="#editModal">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path
@@ -97,45 +109,60 @@
                                                 <path fill-rule="evenodd"
                                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                                             </svg>
-                                        </button>
+                                        </a>
+
 
                                         {{-- Modal Edit Pengumuman --}}
-                                        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="editModal" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered ">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">Edit Pengumuman</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form action="{{ route('announcement.update', ['id' => $announcement->id]) }}" method="POST" enctype="multipart/form-data">
+                                                    <form
+                                                        action="{{ route('announcement.update', ['id' => $announcement->id]) }}"
+                                                        method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <input type="text" class="form-control" value="{{ $announcement['judul'] }}" name="judul" id="judul">
+                                                                <label for="judul">Judul</label>
+                                                                <input type="text" class="form-control" name="judul"
+                                                                    id="judul"
+                                                                    value="{{ old('judul', $announcement->judul) }}">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <input type="file" name="image" id="image" class="form-control">
+                                                                <input type="file" name="image" id="image"
+                                                                    class="form-control"
+                                                                    value="{{ old('image', $announcement->image) }}">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <textarea name="isi" id="isi" cols="30" rows="6" class="form-control" placeholder="{{ $announcement['isi'] }}"></textarea>
+                                                                <textarea name="isi" id="isi" cols="30" rows="6" class="form-control"
+                                                                    placeholder="{{ old('isi', $announcement->isi) }}"></textarea>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <input type="text" name="link" id="link"
-                                                                    class="form-control" placeholder="masukan link jika ada">
+                                                                    class="form-control"
+                                                                    value="{{ old('link', $announcement->link) }}">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <select name="status" id="" class="form-control" >
-                                                                    <option value="">{{ old('isi') }}</option>
+                                                                <select name="status" id=""
+                                                                    class="form-control">
+                                                                    <option value="{{ $announcement->id }}">
+                                                                        {{ $announcement->status }}</option>
                                                                     <option value="Dipublikasi">Dipublikasi</option>
                                                                     <option value="Draft">Draft</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close</button>
                                                             <button type="submit" class="btn btn-primary">Edit</button>
                                                         </div>
                                                     </form>
@@ -143,10 +170,11 @@
                                             </div>
                                         </div>
 
-                                        <form action="{{ route('announcement.destroy', $announcement->id) }}" method="POST">
+                                        <form action="{{ route('announcement.destroy', $announcement->id) }}"
+                                            method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">
+                                            <button type="submit" class="btn btn-danger me-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                                     <path
@@ -154,15 +182,18 @@
                                                 </svg>
                                             </button>
                                         </form>
-                                        
+
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6">
-                                    <p class="text-center">Pengumuman Kosong</p>
-
+                                <td colspan="6" class="mx-auto text-center">
+                                    <p class="text-muted">Pengumuman Kosong</p>
+                                    <button class="btn btn-primary fw-bold" data-toggle="modal"
+                                        data-target="#exampleModal">
+                                        Tambah Pengumuman
+                                    </button>
                                 </td>
                             </tr>
                         @endforelse

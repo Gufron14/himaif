@@ -16,9 +16,9 @@ class AnnouncementController extends Controller
      */
     public function index()
     {
-        $data['announcements'] = Announcement::all();
+        // $data['announcements'] = Announcement::all();
 
-        return view('admin.announcement', $data);
+        // return view('admin.announcement', $data);
     }
 
     /**
@@ -30,7 +30,7 @@ class AnnouncementController extends Controller
     {
         $data['announcements'] = Announcement::all();
 
-        return view('announcements/add', $data);    
+        return view('announcement/add', $data);    
     }
 
     /**
@@ -42,7 +42,7 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {   
         // validasi form
-        $this->validate($request, [
+        $request->validate( [
             'judul' => 'required',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
             'isi' => 'required|string',
@@ -66,7 +66,9 @@ class AnnouncementController extends Controller
 
         Announcement::create($data);
 
-        return redirect('/announcement');
+        session()->flash('message', 'Pengumuman ditambahkan');
+
+        return redirect()->back();
     }
 
     /**
@@ -75,9 +77,11 @@ class AnnouncementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Announcement $announcement)
     {
-        //
+        $announcements = Announcement::all();
+
+        return view('admin.announcement', compact('announcements'));
     }
 
     /**
@@ -88,9 +92,9 @@ class AnnouncementController extends Controller
      */
     public function edit(string $id)
     {
-        $announcement = Announcement::findOrFail($id);
+        $announcements = Announcement::findOrFail($id);
 
-        return view('announcement.edit', compact('announcement'));
+        return view('announcement.edit', compact('announcements'));
     }
 
     /**
@@ -103,7 +107,7 @@ class AnnouncementController extends Controller
             'image' => 'nullable|mimes:jpeg,jpg,png,gif,svg|max:2048',
             'isi' => 'required',
             'link' => 'required',
-            'status' => 'nullable|in:Dipublikasi,Draft',
+            'status' => 'required|in:Dipublikasi,Draft'
         ]);
 
         $announcement = Announcement::find($id);
@@ -135,6 +139,8 @@ class AnnouncementController extends Controller
 
         $announcement->update($data);
 
+        session()->flash('message', 'Berhasil diedit');
+
         return redirect('/announcement');
     }
 
@@ -151,7 +157,7 @@ class AnnouncementController extends Controller
         // Hapus item produk
         $announcement->delete();
 
-        session()->flash('message', 'Aplikasi berhasil dihapus');
+        session()->flash('message', 'Pengumuman dihapus');
 
         return redirect()->back();
     }

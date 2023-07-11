@@ -19,6 +19,12 @@
         </div>
     </form>
 
+    @if (session('message'))
+        <div class="alert alert-success mt-3">
+            {{ session('message') }}
+        </div>
+    @endif
+
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 

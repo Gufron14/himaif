@@ -12,14 +12,12 @@ class contentApprove extends Model
     protected $fillable = [
         'author_id',
         'content_id',
-        'content',
-        'category'
     ];
 
     public function author(){
         return $this->belongsToMany(Author::class);
     }
-
+    
     public function content(){
         return $this->belongsToMany(Content::class);
     }

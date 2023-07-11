@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->integer('nim')->unique();
-            $table->integer('angkatan');
-            $table->integer('phone')->unique();
+            $table->string('nim');
+            $table->string('angkatan');
+            $table->string('phone');
             $table->string('alamat');
             $table->string('username');
             $table->string('password');
